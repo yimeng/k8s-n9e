@@ -1,0 +1,24 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: n9e-alpine
+spec:
+  selector:
+    matchLabels:
+      app: alpine
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: alpine
+    spec:
+      containers:
+      - name: alpine-shell
+        image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:alpine-shell
+        volumeMounts:
+          - name: disk-pvc
+            mountPath: "/data4"
+      volumes:
+        - name: disk-pvc
+          persistentVolumeClaim:
+            claimName: disk-ssd-test4

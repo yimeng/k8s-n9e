@@ -1,0 +1,47 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: index
+spec:
+  selector:
+    matchLabels:
+      app: index
+  replicas: 3 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: index
+      app: index
+      containers:
+      - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:index
+        name: index
+        ports:
+        - name: index-http
+          containerPort: 5830
+        - name: index-rpc
+          containerPort: 5831
+        # volumeMounts:
+        #   - name:  config
+        #     mountPath:  /n9e/etc/address.yml
+        #     subPath: address.yml
+      # volumes:
+      #   - name:  config
+      #     configMap:
+      #       name: transfer-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: index-svc
+  labels:
+    app: index
+spec:
+  ports:
+  - port: 5830
+    name: index-http
+  - port: 5831
+    name: index-rpc
+  clusterIP: None
+  selector:
+    app: index

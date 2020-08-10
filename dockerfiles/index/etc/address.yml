@@ -1,0 +1,14 @@
+---
+monapi:
+  http: 0.0.0.0:5800
+  addresses:
+    - 127.0.0.1
+
+index:
+  http: 0.0.0.0:5830
+  rpc: 0.0.0.0:5831
+
+collector:
+  http: 0.0.0.0:2058
+
+

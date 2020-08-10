@@ -1,0 +1,36 @@
+name: Build and Deploy n9e golang binary 
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: 'yimeng/k8s-n9e'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'didi/nightingale'
+          path: 'didi/nightingale'
+          
+      - name: build n9e
+        run: didi/nightingale/control build
+
+      - name: check env
+        run: ls -l yimeng/k8s-n9e/dockerfiles/*/*
+
+      - name: build docker with dockerfile
+        run: yimeng/k8s-n9e/build.sh
+
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: yimeng/k8s-n9e/n9e
+          tag_with_ref: true
+
+      - name: push docker images 
+        run: yimeng/k8s-n9e/push.sh

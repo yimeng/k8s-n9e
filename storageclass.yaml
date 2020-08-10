@@ -1,0 +1,10 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: alicloud-disk-ssd
+provisioner: alicloud/disk
+reclaimPolicy: Retain
+parameters:
+  type: cloud_ssd
+  fstype: "ext4"
+  readonly: "false"

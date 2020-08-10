@@ -1,0 +1,82 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: n9e-transfer
+spec:
+  selector:
+    matchLabels:
+      app: transfer
+  replicas: 3 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: transfer
+    spec:
+      containers:
+      - image: yimeng/transfer
+        name: transfer
+        ports:
+        - containerPort: 8889
+        volumeMounts:
+          - name:  config
+            mountPath:  /n9e/etc/address.yml
+            subPath: address.yml
+      volumes:
+        - name:  config
+          configMap:
+            name: transfer-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n9e-tsdb
+spec:
+  selector:
+    matchLabels:
+      app: tsdb
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: tsdb
+    spec:
+      containers:
+      - name: tsdb
+        image: yimeng/tsdb
+        ports:
+        - containerPort: 9999
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n9e-index
+spec:
+  selector:
+    matchLabels:
+      app: index
+  replicas: 3 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: index
+    spec:
+      containers:
+      - name: index
+        image: yimeng/index
+        ports:
+        - containerPort: 9999
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: n9e-transfer
+spec:
+  selector:
+    app:  transfer
+  ports:
+  - name:  transfer-http
+    port:  5810
+    targetPort:  5810
+  - name: transfer-rpc 
+    port: 5811
+    targetPort:  5811
