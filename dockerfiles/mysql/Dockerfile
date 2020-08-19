@@ -1,3 +1,3 @@
-FROM mysql:5
+FROM mysql:5.7
 COPY sql /docker-entrypoint-initdb.d
-ENV MYSQL_ROOT_PASSWORD=123456
+#ENV MYSQL_ROOT_PASSWORD=123456
