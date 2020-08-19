@@ -1,0 +1,84 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: judge
+spec:
+  selector:
+    matchLabels:
+      app: judge
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: judge
+    spec: 
+      containers:
+      - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:collector
+        name: collector
+        ports:
+        - name: collector-http
+          containerPort: 2058
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "512Mi"
+          requests:
+            memory: "512Mi" 
+        volumeMounts:
+          - name: address
+            mountPath: /n9e/etc/address.yml
+            subPath: address.yml
+          - name: collector
+            mountPath: /n9e/etc/collector.yml
+            subPath: collector.yml
+        volumes:
+          - name: address
+            configMap:
+              name: address-config
+          - name:  collector
+            configMap:
+              name: collector-config
+      - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:judge
+        name: judge
+        ports:
+        - name: judge-http
+          containerPort: 5840
+        - name: judge-rpc
+          containerPort: 5841
+        volumeMounts:
+          - name: address
+            mountPath: /n9e/etc/address.yml
+            subPath: address.yml
+          - name: judge
+            mountPath: /n9e/etc/judge.yml
+            subPath: judge.yml
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "512Mi"
+          requests:
+            memory: "512Mi"
+      volumes:
+        - name: address
+          configMap:
+            name: address-config
+        - name:  judge
+          configMap:
+            name: judge-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: judge-svc
+  labels:
+    app: judge
+spec:
+  ports:
+  - port: 5840
+    name: judge-http
+  - port: 5841
+    name: judge-rpc
+  clusterIP: None
+  selector:
+    app: judge

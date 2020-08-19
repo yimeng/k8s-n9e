@@ -23,15 +23,6 @@ spec:
         volumeMounts:
         - name: ssd-data
           mountPath:  /data
-  volumeClaimTemplates:
-  - metadata:
-      name: ssd-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "alicloud-disk-available"
-      resources:
-        requests:
-          storage: 20Gi
 ---
 apiVersion: v1
 kind: Service

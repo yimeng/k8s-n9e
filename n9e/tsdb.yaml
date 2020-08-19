@@ -8,15 +8,16 @@ spec:
     matchLabels:
       app: tsdb # has to match .spec.template.metadata.labels
   serviceName: "tsdb-svc"
-  replicas: 2 # by default is 1
+  replicas: 1 # by default is 1
   template:
     metadata:
       labels:
         app: tsdb # has to match .spec.selector.matchLabels
     spec:
       containers:
-      - name: tsdb
-        image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:tsdb
+
+      - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:tsdb
+        name: tsdb
         ports:
         - name: tsdb-http
           containerPort: 5820
@@ -25,15 +26,50 @@ spec:
         volumeMounts:
         - name: ssd-data
           mountPath: /n9e/data
+        - name: address
+          mountPath: /n9e/etc/address.yml
+          subPath: address.yml
+        - name: tsdb
+          mountPath: /n9e/etc/tsdb.yml
+          subPath: tsdb.yml
+
+      - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:collector
+        name: collector
+        ports:
+        - name: collector-http
+          containerPort: 2058
+        resources:
+          limits:
+            cpu: "1"
+            memory: "512Mi"
+        volumeMounts:
+          - name: address
+            mountPath: /n9e/etc/address.yml
+            subPath: address.yml
+          - name: collector
+            mountPath: /n9e/etc/collector.yml
+            subPath: collector.yml
+
+      volumes:
+        - name: address
+          configMap:
+            name: address-config
+        - name:  collector
+          configMap:
+            name: collector-config
+        - name: tsdb 
+          configMap:
+            name: tsdb-config
   volumeClaimTemplates:
-  - metadata:
-      name: ssd-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "alicloud-disk-available"
-      resources:
-        requests:
-          storage: 20Gi
+    - metadata:
+        name: ssd-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "alicloud-disk-available"
+        resources:
+          requests:
+            storage: 20Gi
+
 ---
 apiVersion: v1
 kind: Service

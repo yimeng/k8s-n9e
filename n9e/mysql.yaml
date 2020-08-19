@@ -16,22 +16,17 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:mysql5
+        image:  monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:n9e-mysql5-v1
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: "123456"
+        resources:
+          requests:
+            memory: "2048Mi"
+            cpu: "500m"
         ports:
         - name: mysql
-          containerPort: 3066
-        volumeMounts:
-        - name: ssd-data
-          mountPath:  /var/lib/mysql
-  volumeClaimTemplates:
-  - metadata:
-      name: ssd-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "alicloud-disk-available"
-      resources:
-        requests:
-          storage: 20Gi
+          containerPort: 3306
 ---
 apiVersion: v1
 kind: Service

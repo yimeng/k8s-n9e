@@ -6,12 +6,12 @@ spec:
   selector:
     matchLabels:
       app: index
-  replicas: 3 # tells deployment to run 2 pods matching the template
+  replicas: 2 # tells deployment to run 2 pods matching the template
   template:
     metadata:
       labels:
         app: index
-      app: index
+    spec: 
       containers:
       - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:index
         name: index
@@ -20,14 +20,49 @@ spec:
           containerPort: 5830
         - name: index-rpc
           containerPort: 5831
-        # volumeMounts:
-        #   - name:  config
-        #     mountPath:  /n9e/etc/address.yml
-        #     subPath: address.yml
-      # volumes:
-      #   - name:  config
-      #     configMap:
-      #       name: transfer-config
+        volumeMounts:
+          - name: address
+            mountPath: /n9e/etc/address.yml
+            subPath: address.yml
+          - name: index 
+            mountPath: /n9e/etc/index.yml
+            subPath: index.yml
+        resources:
+          limits:
+            cpu: "1"
+            memory: "512Mi"
+          requests:
+            memory: "512Mi"
+      - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:collector
+        name: collector
+        ports:
+        - name: collector-http
+          containerPort: 2058
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "512Mi"
+          requests:
+            memory: "512Mi" 
+        volumeMounts:
+          - name: address
+            mountPath: /n9e/etc/address.yml
+            subPath: address.yml
+          - name: collector
+            mountPath: /n9e/etc/collector.yml
+            subPath: collector.yml
+
+      volumes:
+        - name: address
+          configMap:
+            name: address-config
+        - name:  index
+          configMap:
+            name: index-config
+        - name:  collector
+          configMap:
+            name: collector-config
+
 
 ---
 apiVersion: v1

@@ -1,0 +1,49 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec: 
+      containers:
+      - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:nginx
+        name: nginx
+        ports:
+        - name: nginx-http
+          containerPort: 80
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "512Mi"
+          requests:
+            memory: "512Mi" 
+        volumeMounts:
+          - name: nginx
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+      volumes:
+        - name: nginx
+          configMap:
+            name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: nginx-http
+  type: LoadBalancer
+  selector:
+    app: nginx
