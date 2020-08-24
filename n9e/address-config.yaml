@@ -1,0 +1,36 @@
+apiVersion: v1
+data:
+  address.yml: |+
+    ---
+    monapi:
+      http: 0.0.0.0:5800
+      addresses:
+        - monapi-svc
+
+    transfer:
+      http: 0.0.0.0:5810
+      rpc: 0.0.0.0:5811
+      addresses:
+        - transfer-svc
+
+    tsdb:
+      http: 0.0.0.0:5820
+      rpc: 0.0.0.0:5821
+
+    index:
+      http: 0.0.0.0:5830
+      rpc: 0.0.0.0:5831
+
+    judge:
+      http: 0.0.0.0:5840
+      rpc: 0.0.0.0:5841
+
+    collector:
+      http: 0.0.0.0:2058
+
+
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: address-config
+  selfLink: /api/v1/namespaces/default/configmaps/address-config

@@ -19,9 +19,6 @@ spec:
         - name: nginx-http
           containerPort: 80
         resources:
-          limits:
-            cpu: "0.5"
-            memory: "512Mi"
           requests:
             memory: "512Mi" 
         volumeMounts:

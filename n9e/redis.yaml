@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: redis
-  namespace: default
 spec:
   selector:
     matchLabels:
@@ -20,9 +19,6 @@ spec:
         ports:
         - name: redis
           containerPort: 6379
-        volumeMounts:
-        - name: ssd-data
-          mountPath:  /data
 ---
 apiVersion: v1
 kind: Service

@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  index.yml: |
+    logger:
+      dir: logs/index
+      level: DEBUG
+      keepHours: 2
+    identity:
+      specify: ""
+      shell: hostname -I | awk '{print $1}'
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: index-config
+  selfLink: /api/v1/namespaces/default/configmaps/index-config

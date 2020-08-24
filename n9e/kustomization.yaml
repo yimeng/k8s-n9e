@@ -1,0 +1,20 @@
+commonLabels:
+  app: n9e
+resources:
+- index.yaml
+- judge.yaml
+- monapi.yaml
+- mysql.yaml
+- nginx.yaml
+- redis.yaml
+- transfer.yaml
+- tsdb.yaml
+- address-config.yaml
+- collector-config.yaml
+- index-config.yaml
+- judge-config.yaml
+- monapi-config.yaml
+- mysql-config.yaml
+- nginx-config.yaml
+- transfer-config.yaml
+- tsdb-config.yaml

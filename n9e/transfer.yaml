@@ -28,9 +28,6 @@ spec:
             mountPath: /n9e/etc/transfer.yml
             subPath: transfer.yml
         resources:
-          limits:
-            cpu: "1"
-            memory: "1024Mi"
           requests:
             memory: "512Mi"
       - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:collector
@@ -39,9 +36,6 @@ spec:
         - name: collector-http
           containerPort: 2058
         resources:
-          limits:
-            cpu: "1"
-            memory: "1024Mi"
           requests:
             memory: "512Mi" 
         volumeMounts:

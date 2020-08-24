@@ -19,9 +19,6 @@ spec:
         - name: collector-http
           containerPort: 2058
         resources:
-          limits:
-            cpu: "0.5"
-            memory: "512Mi"
           requests:
             memory: "512Mi" 
         volumeMounts:
@@ -31,13 +28,6 @@ spec:
           - name: collector
             mountPath: /n9e/etc/collector.yml
             subPath: collector.yml
-        volumes:
-          - name: address
-            configMap:
-              name: address-config
-          - name:  collector
-            configMap:
-              name: collector-config
       - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:judge
         name: judge
         ports:
@@ -53,9 +43,6 @@ spec:
             mountPath: /n9e/etc/judge.yml
             subPath: judge.yml
         resources:
-          limits:
-            cpu: "0.5"
-            memory: "512Mi"
           requests:
             memory: "512Mi"
       volumes:
@@ -65,6 +52,9 @@ spec:
         - name:  judge
           configMap:
             name: judge-config
+        - name:  collector
+          configMap:
+            name: collector-config
 
 ---
 apiVersion: v1

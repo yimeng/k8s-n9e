@@ -1,0 +1,55 @@
+apiVersion: v1
+data:
+  collector.yml: |
+    logger:
+      dir: logs/collector
+      level: WARNING
+      keepHours: 2
+
+    identity:
+      specify: ""
+      shell: hostname -I | awk '{print $1}'
+
+    stra:
+      enable: true
+      portPath: ./etc/port
+      procPath: ./etc/proc
+      logPath: ./etc/log
+
+    sys:
+      # timeout in ms
+      # interval in second
+      timeout: 1000
+      interval: 20
+      plugin: ./plugin
+
+      # monitor nic which filtered by prefix
+      ifacePrefix:
+        - eth
+        - em
+        - ens
+
+      # ignore disk mount point
+      mountIgnore:
+        prefix:
+          - /var/lib
+          - /run
+        # collect anyway
+        exclude: []
+
+      ignoreMetrics:
+        - cpu.core.idle
+        - cpu.core.util
+        - cpu.core.sys
+        - cpu.core.user
+        - cpu.core.nice
+        - cpu.core.guest
+        - cpu.core.irq
+        - cpu.core.softirq
+        - cpu.core.iowait
+        - cpu.core.steal
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: collector-config
+  selfLink: /api/v1/namespaces/default/configmaps/collector-config

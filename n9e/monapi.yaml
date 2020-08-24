@@ -19,9 +19,6 @@ spec:
         - name: collector-http
           containerPort: 2058
         resources:
-          limits:
-            cpu: "0.5"
-            memory: "512Mi"
           requests:
             memory: "512Mi" 
         volumeMounts:
@@ -31,13 +28,7 @@ spec:
           - name: collector
             mountPath: /n9e/etc/collector.yml
             subPath: collector.yml
-        volumes:
-        - name: address
-          configMap:
-            name: address-config
-        - name:  collector
-          configMap:
-            name: collector-config
+
       - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:monapi
         name: monapi
         ports:
@@ -54,9 +45,6 @@ spec:
             mountPath: /n9e/etc/mysql.yml
             subPath: mysql.yml
         resources:
-          limits:
-            cpu: "1"
-            memory: "512Mi"
           requests:
             memory: "512Mi"
       volumes:
@@ -69,6 +57,9 @@ spec:
         - name: mysql
           configMap:
             name: mysql-config
+        - name:  collector
+          configMap:
+            name: collector-config
 
 ---
 apiVersion: v1

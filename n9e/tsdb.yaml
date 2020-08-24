@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: tsdb
-  namespace: default
 spec:
   selector:
     matchLabels:
@@ -24,7 +23,7 @@ spec:
         - name: tsdb-rpc
           containerPort: 5821
         volumeMounts:
-        - name: ssd-data
+        - name: ssd-data-xfs
           mountPath: /n9e/data
         - name: address
           mountPath: /n9e/etc/address.yml
@@ -39,8 +38,7 @@ spec:
         - name: collector-http
           containerPort: 2058
         resources:
-          limits:
-            cpu: "1"
+          requests:
             memory: "512Mi"
         volumeMounts:
           - name: address
@@ -62,10 +60,10 @@ spec:
             name: tsdb-config
   volumeClaimTemplates:
     - metadata:
-        name: ssd-data
+        name: ssd-data-xfs
       spec:
         accessModes: [ "ReadWriteOnce" ]
-        storageClassName: "alicloud-disk-available"
+        storageClassName: "alicloud-disk-ssd-xfs"
         resources:
           requests:
             storage: 20Gi

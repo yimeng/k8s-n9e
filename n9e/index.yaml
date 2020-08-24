@@ -28,9 +28,6 @@ spec:
             mountPath: /n9e/etc/index.yml
             subPath: index.yml
         resources:
-          limits:
-            cpu: "1"
-            memory: "512Mi"
           requests:
             memory: "512Mi"
       - image: monitor-registry.cn-beijing.cr.aliyuncs.com/dev/tools:collector
@@ -39,11 +36,8 @@ spec:
         - name: collector-http
           containerPort: 2058
         resources:
-          limits:
-            cpu: "0.5"
-            memory: "512Mi"
           requests:
-            memory: "512Mi" 
+            memory: "512Mi"
         volumeMounts:
           - name: address
             mountPath: /n9e/etc/address.yml

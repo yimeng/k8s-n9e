@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  tsdb.yml: |-
+    rrd:
+      storage: data/5821
+    cache:
+      keepMinutes: 120
+    logger:
+      dir: logs/tsdb
+      level: DEBUG
+      keepHours: 2
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: tsdb-config
+  selfLink: /api/v1/namespaces/default/configmaps/tsdb-config

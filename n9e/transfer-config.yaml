@@ -1,0 +1,35 @@
+apiVersion: v1
+data:
+  transfer.yml: |
+    backend:
+      maxConns: 20000
+      # in ms
+      # connTimeout: 1000
+      # callTimeout: 3000
+      cluster:
+        tsdb01: tsdb-0.tsdb-svc:5821
+      influxdb:
+        enabled: false
+        username: "influx"
+        password: "admin123"
+        precision: "s"
+        database: "n9e"
+        address: "http://127.0.0.1:8086"
+
+      opentsdb:
+        enabled: false
+        address: "127.0.0.1:4242"
+      kafka:
+        enabled: false
+        brokersPeers: "192.168.1.1:9092,192.168.1.2:9092"
+        topic: "n9e"
+
+    logger:
+      dir: logs/transfer
+      level: DEBUG
+      keepHours: 2
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: transfer-config
+  selfLink: /api/v1/namespaces/default/configmaps/transfer-config
